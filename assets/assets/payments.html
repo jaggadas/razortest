@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<meta name="viewport" content="width=device-width">
+<head><title>RazorPay Web Payment</title>
+     <base href="$FLUTTER_BASE_HREF">
+
+     <meta charset="UTF-8">
+     <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+     <meta name="description" content="A new Flutter project.">
+
+     <!-- iOS meta tags & icons -->
+     <meta name="apple-mobile-web-app-capable" content="yes">
+     <meta name="apple-mobile-web-app-status-bar-style" content="black">
+     <meta name="apple-mobile-web-app-title" content="razorpay_test">
+     <link rel="apple-touch-icon" href="icons/Icon-192.png">
+</head>
+<body>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+        const queryString = window.location.search;
+        console.log(queryString);
+        const urlParams = new URLSearchParams(queryString);
+        const name = urlParams.get('name')
+        const price = urlParams.get('price')
+        const image = urlParams.get('image')
+
+
+      options = {
+         "key": "rzp_live_Gyfy0mLnMhRwND",
+          "amount": price, "currency": "INR",
+          "name":"La Mita's",
+          "description": name,
+
+          "handler": function (response){
+             window.parent.postMessage("SUCCESS","*");      //2
+             alert(response.razorpay_payment_id);
+             alert(response.razorpay_order_id);
+             alert(response.razorpay_signature)
+          },
+          "prefill": {
+             "name": "",
+             "email":"ajit@gmail.com",
+             "contact":"+91-000000000"
+           },
+           "notes": {
+             "address": "Autofy"
+          },
+          "theme": {
+             "color": "#EF7C58"
+          },
+          "modal": {
+            "ondismiss": function(){
+               window.parent.postMessage("MODAL_CLOSED","*");   //3
+            }
+          }
+       };
+       var rzp1 = new Razorpay(options);
+       window.onload = function(e){  //1
+          rzp1.open();
+          e.preventDefault();
+       }
+
+     </script>
+</body>
+</html>
